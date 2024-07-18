@@ -49,18 +49,18 @@ using std::forward;
 using std::function;
 using std::is_move_assignable_v;
 using std::is_trivially_copyable_v;
+using std::lock_guard;
 using std::make_unique;
 using std::memcpy;
 using std::move;
 using std::optional;
+using std::scoped_lock;
 using std::span;
 using std::string;
 using std::unexpected;
 using std::unique_ptr;
 using std::ranges::for_each;
 using std::ranges::views::reverse;
-using std::lock_guard;
-using std::scoped_lock;
 
 using std::mutex;
 
@@ -95,11 +95,13 @@ class darray {
   size_t m_original_capacity;
   size_t m_size;
 
-  // no conditional member variable support as yet, so all this foo is to 
+  // no conditional member variable support as yet, so all this foo is to
   // reduce impact of m_mutex member when thread protection disabled
-  struct Empty{};
-  using ConditionalMutex = std::conditional<ThreadProtection::do_multithreaded_protection, std::mutex, Empty>::type;
-  [[no_unique_address]]mutable ConditionalMutex m_mutex;
+  struct Empty {};
+  using ConditionalMutex =
+      std::conditional<ThreadProtection::do_multithreaded_protection,
+                       std::mutex, Empty>::type;
+  [[no_unique_address]] mutable ConditionalMutex m_mutex;
 
   // construct darray specifying initial capacity
   constexpr explicit darray(std::size_t initial_capacity)
@@ -162,7 +164,7 @@ class darray {
   inline auto buffer_copy(const span<T> source, span<T> dest) noexcept
       -> expected<size_t, error> {
     for_each(source,
-               [&dest, idx = 0](T &value) mutable { dest[idx++] = value; });
+             [&dest, idx = 0](T &value) mutable { dest[idx++] = value; });
     return {dest.size()};
   }
 
@@ -184,8 +186,8 @@ class darray {
       -> void {
     // could memcpy be used for is_trivially_copyable DIRECT, or memove for
     // SHIFT_LEFT and SHIFT_RIGHT? (memove would be great as it correctly uses
-    // forward or reverse copying depending on buffer overlap) 
-    // memcopy  and memmove can only be used if "not potentially-overlapping 
+    // forward or reverse copying depending on buffer overlap)
+    // memcopy  and memmove can only be used if "not potentially-overlapping
     // subobjects" which AFAIK can't be detected
     //  - https://en.cppreference.com/w/cpp/types/is_trivially_copyable
     //  - https://en.cppreference.com/w/cpp/string/byte/memmove
@@ -317,7 +319,7 @@ class darray {
           });
     };
 
-    const auto process = [&](){
+    const auto process = [&]() {
       ProcessingData data{m_capacity};
       return buffer_create(&data, other.m_capacity)
           .and_then(copy)
@@ -331,7 +333,7 @@ class darray {
     };
 
     if constexpr (ThreadProtection::do_multithreaded_protection) {
-      const scoped_lock<mutex> lock(m_mutex,other.m_mutex);
+      const scoped_lock<mutex> lock(m_mutex, other.m_mutex);
       return process();
     } else {
       return process();
@@ -340,7 +342,7 @@ class darray {
 
   inline auto darray_move_into_me(darray &&other) noexcept
       -> expected<size_t, error> {
-    const auto process = [&]() -> expected<size_t, error>{
+    const auto process = [&]() -> expected<size_t, error> {
       m_buffer = move(other.m_buffer);
       m_capacity = other.m_capacity;
       m_original_capacity = other.m_original_capacity;
@@ -349,7 +351,7 @@ class darray {
     };
 
     if constexpr (ThreadProtection::do_multithreaded_protection) {
-      const scoped_lock<mutex> lock(m_mutex,other.m_mutex);
+      const scoped_lock<mutex> lock(m_mutex, other.m_mutex);
       return process();
     } else {
       return process();
