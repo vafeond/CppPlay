@@ -15,12 +15,12 @@ Install dependencies:
 - `Docker`  
 - `GNU Make`  
 
-Create and enter Docker environment. From package root directory:  
+Create and enter Docker environment. From repository root directory:  
 - `make cbuild`, build Docker image  
 - `make ccreate`, create Docker container  
 - `make cexec`, enter running Docker container  
 
-Exercise the code:  
+Exercise the code from within the container:  
 - `make test`, run unit tests  
 - `make test coverage`, run unit tests and display code coverage  
 - `make test SANITIZE=address:leak`, run unit tests with address and leak sanitizers
