@@ -45,8 +45,8 @@ $(info MAKEFILE_PATHS_FROM_ROOT=$(MAKEFILE_PATHS_FROM_ROOT))
 #
 # BUILD_EXCLUDES is a comma-separated list of relatve Makefile paths
 # that should not be invoked by the build targets
-BUILD_EXCLUDES=darray
-BUILD_DEBUG_EXCLUDES=darray/benchmark
+BUILD_EXCLUDES=darray darray/benchmark
+BUILD_DEBUG_EXCLUDES=
 debug:
 	$(info Building all...)
 	echo -n $(subst $(subst ,, ),:,$(strip $(filter-out $(BUILD_EXCLUDES) $(BUILD_DEBUG_EXCLUDES),$(MAKEFILE_PATHS_FROM_ROOT)))) | xargs --delimiter=: -IARG make -C ARG debug $(COVERAGE_QUALIFIER)
