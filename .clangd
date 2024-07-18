@@ -1,0 +1,17 @@
+CompileFlags:                     # Tweak the parse settings
+  Add:
+    - -stdlib=libc++
+    - -std=c++23
+    - -Wall
+    - -Wextra
+    - -Wpedantic
+    - -I/usr/include/c++/13
+    - -I/usr/include/x86_64-linux-gnu/c++/13
+    - -I/home/stack/darray/include
+    - -I/home/extra-sources/googletest-1.15.0/googletest/include/gtest
+    - -I/home/extra-sources/googletest-1.15.0/googletest/include
+    - -I/home/extra-sources/googletest-1.15.0/googletest 
+    - -I/home/extra-sources/benchmark-1.8.5/include
+    - -D__cplusplus=202300L
+    - -D__cpp_concepts=202002L
+  Compiler: gcc++
