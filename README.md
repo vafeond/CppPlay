@@ -37,6 +37,12 @@ See `build/README.md`.
 ## IDE Support    
 See `devtools/README.md`.
 
-# TODO  
+## TODO  
 - Algorithm requiring a random access iterator, such as a heap, search, or sort. Tested with `darray`.
 
+# License  
+Everything here is [Unlicense](https://unlicense.org).
+If a file doesn't contain the Unlicense header, assume Unlicense unless 
+otherwise stated.
+
+So, use it at will. Credit it here if you want.
