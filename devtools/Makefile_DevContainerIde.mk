@@ -64,7 +64,7 @@ ibuild:
 	docker build --tag=$(IMAGE_NAME_IDE) --build-arg IMAGE_NAME=$(IMAGE_NAME) ./devtools
 
 ibuildnocache:
-	docker build --no-cache --tag=$(IMAGE_NAME_IDE) ./devtools
+	docker build --no-cache --tag=$(IMAGE_NAME_IDE) --build-arg IMAGE_NAME=$(IMAGE_NAME) ./devtools
 
 icreate:
 	docker run \
